@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>London Restaurant Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .controls {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        #map {
+            height: 500px;
+            border-radius: 6px;
+        }
+
+        .drawer {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.15);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .drawer-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .restaurant-list {
+            padding: 1rem;
+        }
+
+        .restaurant-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .restaurant-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .restaurant-item:last-child {
+            border-bottom: none;
+        }
+
+        .restaurant-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .restaurant-address {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .info-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-box p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>London Restaurant Map</h1>
+    </header>
+
+    <div class="container">
+        <div class="info-box">
+            <p>Explore curated restaurants across London. Click on map pins to see details, or open the list view to browse all locations.</p>
+        </div>
+
+        <div class="controls">
+            <button onclick="toggleDrawer()">📋 View Restaurant List</button>
+            <button onclick="resetMap()">🎯 Reset Map View</button>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <div class="overlay" onclick="toggleDrawer()"></div>
+    
+    <div class="drawer">
+        <div class="drawer-header">
+            <h2>All Restaurants</h2>
+            <button class="close-btn" onclick="toggleDrawer()">✕</button>
+        </div>
+        <div class="restaurant-list" id="restaurantList"></div>
+    </div>
+
+    <script>
+        // Restaurant data with coordinates
+        const restaurants = [
+            {
+                name: "Demartino",
+                address: "11 Circus Rd, St John's Wood, London NW8 9DR",
+                lat: 51.5334,
+                lng: -0.1737
+            },
+            {
+                name: "St. John",
+                address: "26 St John St, Barbican, London EC1M 4AY",
+                lat: 51.5207,
+                lng: -0.1026
+            },
+            {
+                name: "The Westbourne",
+                address: "101 Westbourne Park Villas, London W2 5ED",
+                lat: 51.5211,
+                lng: -0.1989
+            },
+            {
+                name: "Lemonia",
+                address: "89 Regent's Park Rd, Primrose Hill, London NW1 8UY",
+                lat: 51.5415,
+                lng: -0.1572
+            },
+            {
+                name: "Il Baretto",
+                address: "43 Blandford St, Marylebone, London W1U 7HF",
+                lat: 51.5186,
+                lng: -0.1534
+            }
+        ];
+
+        // Initialize map centered on London
+        const map = L.map('map').setView([51.5242, -0.1565], 12);
+
+        // Add tile layer (the actual map imagery)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Custom icon for restaurant pins
+        const restaurantIcon = L.divIcon({
+            className: 'custom-pin',
+            html: '<div style="background-color: #e74c3c; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><div style="width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg);"></div></div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+            popupAnchor: [0, -30]
+        });
+
+        // Add markers for each restaurant
+        const markers = [];
+        restaurants.forEach(restaurant => {
+            const marker = L.marker([restaurant.lat, restaurant.lng], { icon: restaurantIcon })
+                .addTo(map)
+                .bindPopup(`
+                    <div style="min-width: 200px;">
+                        <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 1.1rem;">${restaurant.name}</h3>
+                        <p style="margin: 0; color: #666; font-size: 0.9rem;">${restaurant.address}</p>
+                    </div>
+                `);
+            markers.push({ marker, restaurant });
+        });
+
+        // Populate restaurant list in drawer
+        function populateRestaurantList() {
+            const listContainer = document.getElementById('restaurantList');
+            restaurants.forEach((restaurant, index) => {
+                const item = document.createElement('div');
+                item.className = 'restaurant-item';
+                item.innerHTML = `
+                    <div class="restaurant-name">${restaurant.name}</div>
+                    <div class="restaurant-address">${restaurant.address}</div>
+                `;
+                item.onclick = () => {
+                    // Zoom to restaurant and open popup
+                    map.setView([restaurant.lat, restaurant.lng], 15);
+                    markers[index].marker.openPopup();
+                    toggleDrawer();
+                };
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Toggle drawer
+        function toggleDrawer() {
+            const drawer = document.querySelector('.drawer');
+            const overlay = document.querySelector('.overlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // Reset map to initial view
+        function resetMap() {
+            map.setView([51.5242, -0.1565], 12);
+        }
+
+        // Initialize
+        populateRestaurantList();
+    </script>
+</body>
+</html>
