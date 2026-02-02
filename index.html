@@ -18,68 +18,72 @@
         }
 
         body {
-            font-family: Times, "Times New Roman", Georgia, serif;
-            background: white;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f0f0f0;
             color: #000;
-            font-size: 14px;
+            font-size: 11px;
         }
 
         header {
-            background: #990000;
+            background: #006600;
             color: white;
-            padding: 8px 15px;
-            border-bottom: 2px solid #660000;
+            padding: 10px 15px;
+            border-bottom: 1px solid #004400;
         }
 
         h1 {
-            font-size: 20px;
-            font-weight: normal;
-            font-style: italic;
-            letter-spacing: 1px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0px;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 760px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 10px;
+            background: white;
         }
 
         .controls {
-            margin-bottom: 12px;
+            margin-bottom: 5px;
             display: flex;
-            gap: 8px;
+            gap: 4px;
             align-items: center;
             padding: 8px 0;
         }
 
         button {
-            background: #e0e0e0;
+            background: #e8e8e8;
             color: #000;
-            border: 2px outset #e0e0e0;
-            padding: 3px 12px;
+            border: 1px solid #999;
+            border-bottom: 1px solid #666;
+            border-right: 1px solid #666;
+            padding: 3px 8px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-family: Arial, Helvetica, sans-serif;
         }
 
         button:hover {
-            background: #f0f0f0;
+            background: #d0e8d0;
+            border-color: #006600;
         }
 
         button:active {
-            border-style: inset;
+            background: #c0d8c0;
+            border-style: solid;
         }
 
         .map-container {
-            background: #f5f5f5;
-            border: 2px inset #999;
-            padding: 8px;
-            margin-bottom: 15px;
+            background: white;
+            border: 1px solid #999;
+            padding: 0;
+            margin-bottom: 10px;
         }
 
         #map {
             height: 450px;
-            border: 1px solid #666;
+            border: none;
         }
 
         .drawer {
@@ -88,7 +92,7 @@
             top: 0;
             width: 380px;
             height: 100vh;
-            background: #e8e8e8;
+            background: #f0f0f0;
             border-left: 2px solid #666;
             transition: right 0.3s ease;
             z-index: 1000;
@@ -100,72 +104,62 @@
         }
 
         .drawer-header {
-            background: #990000;
+            background: #006600;
             color: white;
-            padding: 10px 15px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #660000;
+            border-bottom: 1px solid #004400;
         }
 
         .drawer-header h2 {
-            font-size: 16px;
-            font-weight: normal;
-            font-style: italic;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         .close-btn {
-            background: #e0e0e0;
-            border: 2px outset #e0e0e0;
+            background: #e8e8e8;
+            border: 1px solid #999;
             color: #000;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: normal;
             cursor: pointer;
-            padding: 2px 8px;
+            padding: 2px 6px;
             font-family: Arial, Helvetica, sans-serif;
         }
 
         .close-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .close-btn:active {
-            border-style: inset;
+            background: #d0e8d0;
         }
 
         .restaurant-list {
-            padding: 10px;
+            padding: 8px;
         }
 
         .restaurant-item {
-            padding: 10px;
-            border-bottom: 1px solid #999;
+            padding: 8px;
+            border: 1px solid #ccc;
             cursor: pointer;
             background: white;
-            margin-bottom: 2px;
-            border: 1px solid #ccc;
-        }
-
-        .restaurant-item:hover {
-            background: #ffffcc;
-        }
-
-        .restaurant-item:last-child {
-            border-bottom: 1px solid #999;
-        }
-
-        .restaurant-name {
-            font-size: 14px;
-            font-weight: bold;
-            color: #000066;
             margin-bottom: 3px;
         }
 
+        .restaurant-item:hover {
+            background: #f0f8f0;
+            border-color: #006600;
+        }
+
+        .restaurant-name {
+            font-size: 11px;
+            font-weight: bold;
+            color: #006600;
+            margin-bottom: 2px;
+        }
+
         .restaurant-address {
-            font-size: 12px;
-            color: #333;
-            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #666;
         }
 
         .overlay {
@@ -181,6 +175,14 @@
 
         .overlay.active {
             display: block;
+        }
+
+        .section-header {
+            margin-top: 10px;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            color: #006600;
         }
 
         .info-box {
@@ -215,16 +217,16 @@
 </head>
 <body>
     <header>
-        <h1>Lunch with Epstein -- Dine with the 'Stein</h1>
+        <h1>Lunch with Epstein – Dine with the 'Stein</h1>
     </header>
 
     <div class="container">
         <div class="controls">
-            <button onclick="toggleDrawer()">📋 View Restaurant List</button>
-            <button onclick="resetMap()">🎯 Reset Map View</button>
+            <button onclick="toggleDrawer()">Check the Files</button>
+            <button onclick="resetMap()">Reset Map View</button>
         </div>
 
-        <div style="margin-top: 15px; margin-bottom: 5px; font-weight: bold; font-size: 13px;">Find Jeff</div>
+        <div style="margin-top: 10px; margin-bottom: 4px; font-weight: bold; font-size: 11px; color: #006600;">Find Jeff</div>
         <div class="controls">
             <button onclick="filterCity('New York')">New York</button>
             <button onclick="filterCity('Los Angeles')">Los Angeles</button>
