@@ -215,14 +215,10 @@
 </head>
 <body>
     <header>
-        <h1>London Restaurant Map</h1>
+        <h1>Lunch with Epstein -- Dine with the 'Stein</h1>
     </header>
 
     <div class="container">
-        <div class="info-box">
-            <p>Explore curated restaurants across London. Click on map pins to see details, or open the list view to browse all locations.</p>
-        </div>
-
         <div class="controls">
             <button onclick="toggleDrawer()">📋 View Restaurant List</button>
             <button onclick="resetMap()">🎯 Reset Map View</button>
@@ -247,39 +243,75 @@
         // Restaurant data with coordinates
         const restaurants = [
             {
-                name: "Demartino",
-                address: "11 Circus Rd, St John's Wood, London NW8 9DR",
-                lat: 51.5334,
-                lng: -0.1737
+                name: "ABC Kitchen",
+                address: "35 East 18th Street, New York, NY 10003, USA",
+                lat: 40.7373,
+                lng: -73.9900
             },
             {
-                name: "St. John",
-                address: "26 St John St, Barbican, London EC1M 4AY",
-                lat: 51.5207,
-                lng: -0.1026
+                name: "Monkey Bar",
+                address: "60 East 54th Street, New York, NY 10022, USA",
+                lat: 40.7606,
+                lng: -73.9722
             },
             {
-                name: "The Westbourne",
-                address: "101 Westbourne Park Villas, London W2 5ED",
-                lat: 51.5211,
-                lng: -0.1989
+                name: "Mr. Chow's",
+                address: "20 East 76th Street, New York, NY 10021, USA",
+                lat: 40.7744,
+                lng: -73.9635
             },
             {
-                name: "Lemonia",
-                address: "89 Regent's Park Rd, Primrose Hill, London NW1 8UY",
-                lat: 51.5415,
-                lng: -0.1572
+                name: "Madeo",
+                address: "8490 Sunset Blvd, West Hollywood, CA 90069, USA",
+                lat: 34.0970,
+                lng: -118.3766
             },
             {
-                name: "Il Baretto",
-                address: "43 Blandford St, Marylebone, London W1U 7HF",
-                lat: 51.5186,
-                lng: -0.1534
+                name: "Harry's Bar",
+                address: "26 South Audley Street, Mayfair, London W1K 2PD, UK",
+                lat: 51.5103,
+                lng: -0.1515
+            },
+            {
+                name: "Bel Air Hotel",
+                address: "701 Stone Canyon Road, Los Angeles, CA 90077, USA",
+                lat: 34.0981,
+                lng: -118.4516
+            },
+            {
+                name: "Montage Hotel",
+                address: "225 North Canon Drive, Beverly Hills, CA 90210, USA",
+                lat: 34.0698,
+                lng: -118.4004
+            },
+            {
+                name: "Australia Club",
+                address: "Midtown Manhattan, New York, NY, USA",
+                lat: 40.7549,
+                lng: -73.9840
+            },
+            {
+                name: "Bedminster",
+                address: "1 Mulligan Road, Bedminster Township, NJ 07921, USA",
+                lat: 40.6723,
+                lng: -74.6615
+            },
+            {
+                name: "Gusto",
+                address: "60 Greenwich Avenue, New York, NY 10011, USA",
+                lat: 40.7364,
+                lng: -74.0009
+            },
+            {
+                name: "Harvest",
+                address: "269 Columbus Avenue, New York, NY 10023, USA",
+                lat: 40.7803,
+                lng: -73.9761
             }
         ];
 
-        // Initialize map centered on London
-        const map = L.map('map').setView([51.5242, -0.1565], 12);
+        // Initialize map centered on US
+        const map = L.map('map').setView([40.7128, -74.0060], 4);
 
         // Add tile layer (the actual map imagery)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -340,7 +372,7 @@
 
         // Reset map to initial view
         function resetMap() {
-            map.setView([51.5242, -0.1565], 12);
+            map.setView([40.7128, -74.0060], 4);
         }
 
         // Initialize
