@@ -40,6 +40,8 @@
             letter-spacing: 1px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             margin: 0;
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-style: italic;
         }
 
         .container {
@@ -47,6 +49,73 @@
             margin: 0;
             padding: 0;
             background: white;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: #f8f8f8;
+            border-right: 1px solid #999;
+            padding: 15px;
+            overflow-y: auto;
+            height: calc(100vh - 180px);
+        }
+
+        .sidebar h3 {
+            font-size: 13px;
+            font-weight: bold;
+            color: #006600;
+            margin: 0 0 10px 0;
+        }
+
+        .carousel-container {
+            width: 100%;
+            height: 240px;
+            background: #e0e0e0;
+            border: 1px solid #999;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .carousel-image.active {
+            display: block;
+        }
+
+        .upload-area {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border: 2px dashed #999;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #006600;
+            background: #f0f8f0;
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-area label {
+            cursor: pointer;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .main-content {
+            flex: 1;
         }
 
         .controls-wrapper {
@@ -100,6 +169,12 @@
             height: 100%;
             width: 100%;
             border: none;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
         }
 
         .drawer {
@@ -254,8 +329,21 @@
     </div>
 
     <div class="container">
-        <div class="map-container">
-            <div id="map"></div>
+        <div class="sidebar">
+            <h3>Photo Gallery</h3>
+            <div class="carousel-container" id="carousel">
+                <img src="" alt="Gallery Image" class="carousel-image active" id="carouselImage">
+            </div>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple onchange="handleFileUpload(event)">
+                <label>Click to upload photos (JPG/PNG)</label>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
         </div>
     </div>
 
@@ -481,13 +569,13 @@
             maxZoom: 19
         }).addTo(map);
 
-        // Custom icon for restaurant pins
+        // Custom icon for restaurant pins - subtle green
         const restaurantIcon = L.divIcon({
             className: 'custom-pin',
-            html: '<div style="background-color: #e74c3c; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><div style="width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg);"></div></div>',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30],
-            popupAnchor: [0, -30]
+            html: '<div style="background-color: #228B22; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); opacity: 0.85;"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10]
         });
 
         // Add markers for each restaurant
@@ -555,6 +643,47 @@
 
         // Initialize
         populateRestaurantList();
+
+        // Carousel functionality
+        let carouselImages = [];
+        let currentImageIndex = 0;
+        let carouselInterval;
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                if (file.type.match('image/jpeg') || file.type.match('image/png')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        carouselImages.push(e.target.result);
+                        if (carouselImages.length === 1) {
+                            showImage(0);
+                            startCarousel();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function showImage(index) {
+            const img = document.getElementById('carouselImage');
+            if (carouselImages.length > 0) {
+                img.src = carouselImages[index];
+                img.style.display = 'block';
+                currentImageIndex = index;
+            }
+        }
+
+        function startCarousel() {
+            if (carouselInterval) clearInterval(carouselInterval);
+            carouselInterval = setInterval(() => {
+                if (carouselImages.length > 0) {
+                    currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+                    showImage(currentImageIndex);
+                }
+            }, 20000); // 20 seconds
+        }
     </script>
 </body>
 </html>
