@@ -98,6 +98,11 @@
             border-radius: 4px;
             text-align: center;
             cursor: pointer;
+            display: none; /* Hidden by default - admin only */
+        }
+
+        .upload-area.admin-visible {
+            display: block;
         }
 
         .upload-area:hover {
@@ -1050,6 +1055,54 @@
                 }
             }, 20000); // 20 seconds
         }
+
+        // Admin authentication system
+        // Press Ctrl+Shift+A to toggle admin mode
+        const ADMIN_PASSWORD = 'delfox2024'; // Change this to your desired password
+        
+        function checkAdminStatus() {
+            return sessionStorage.getItem('isAdmin') === 'true';
+        }
+
+        function updateUploadVisibility() {
+            const uploadArea = document.querySelector('.upload-area');
+            if (uploadArea) {
+                if (checkAdminStatus()) {
+                    uploadArea.classList.add('admin-visible');
+                } else {
+                    uploadArea.classList.remove('admin-visible');
+                }
+            }
+        }
+
+        function toggleAdminMode() {
+            if (checkAdminStatus()) {
+                // Already admin, log out
+                sessionStorage.removeItem('isAdmin');
+                alert('Admin mode disabled.');
+            } else {
+                // Prompt for password
+                const password = prompt('Enter admin password:');
+                if (password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem('isAdmin', 'true');
+                    alert('Admin mode enabled. Upload button is now visible.');
+                } else if (password !== null) {
+                    alert('Incorrect password.');
+                }
+            }
+            updateUploadVisibility();
+        }
+
+        // Listen for keyboard shortcut: Ctrl+Shift+A
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                toggleAdminMode();
+            }
+        });
+
+        // Check admin status on page load
+        updateUploadVisibility();
     </script>
 </body>
 </html>
