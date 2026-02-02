@@ -224,6 +224,14 @@
             <button onclick="resetMap()">🎯 Reset Map View</button>
         </div>
 
+        <div style="margin-top: 15px; margin-bottom: 5px; font-weight: bold; font-size: 13px;">Find Jeff</div>
+        <div class="controls">
+            <button onclick="filterCity('New York')">New York</button>
+            <button onclick="filterCity('Los Angeles')">Los Angeles</button>
+            <button onclick="filterCity('London')">London</button>
+            <button onclick="filterCity('New Jersey')">New Jersey</button>
+        </div>
+
         <div class="map-container">
             <div id="map"></div>
         </div>
@@ -373,6 +381,20 @@
         // Reset map to initial view
         function resetMap() {
             map.setView([40.7128, -74.0060], 4);
+        }
+
+        // Filter by city
+        function filterCity(city) {
+            const cityCoords = {
+                'New York': { lat: 40.7128, lng: -74.0060, zoom: 12 },
+                'Los Angeles': { lat: 34.0522, lng: -118.4437, zoom: 11 },
+                'London': { lat: 51.5103, lng: -0.1515, zoom: 13 },
+                'New Jersey': { lat: 40.6723, lng: -74.6615, zoom: 13 }
+            };
+            
+            if (cityCoords[city]) {
+                map.setView([cityCoords[city].lat, cityCoords[city].lng], cityCoords[city].zoom);
+            }
         }
 
         // Initialize
