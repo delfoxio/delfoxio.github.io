@@ -231,7 +231,9 @@
             <button onclick="filterCity('New York')">New York</button>
             <button onclick="filterCity('Los Angeles')">Los Angeles</button>
             <button onclick="filterCity('London')">London</button>
-            <button onclick="filterCity('New Jersey')">New Jersey</button>
+            <button onclick="filterCity('Paris')">Paris</button>
+            <button onclick="filterCity('Cairo')">Cairo</button>
+            <button onclick="filterCity('Turks & Caicos')">Turks & Caicos</button>
         </div>
 
         <div class="map-container">
@@ -278,7 +280,7 @@
             },
             {
                 name: "Harry's Bar",
-                address: "26 South Audley Street, Mayfair, London W1K 2PD, UK",
+                address: "26 South Audley Street, London W1K 2PD, UK",
                 lat: 51.5103,
                 lng: -0.1515
             },
@@ -296,13 +298,13 @@
             },
             {
                 name: "Australia Club",
-                address: "Midtown Manhattan, New York, NY, USA",
-                lat: 40.7549,
-                lng: -73.9840
+                address: "51 East 51st Street, New York, NY 10022, USA",
+                lat: 40.7567,
+                lng: -73.9738
             },
             {
                 name: "Bedminster",
-                address: "1 Mulligan Road, Bedminster Township, NJ 07921, USA",
+                address: "1 Mulligan Road, Bedminster, NJ 07921, USA",
                 lat: 40.6723,
                 lng: -74.6615
             },
@@ -317,6 +319,138 @@
                 address: "269 Columbus Avenue, New York, NY 10023, USA",
                 lat: 40.7803,
                 lng: -73.9761
+            },
+            {
+                name: "Opia Cairo",
+                address: "Corniche El Nil, Garden City, Cairo, Egypt",
+                lat: 30.0444,
+                lng: 31.2357
+            },
+            {
+                name: "Nicola's NYC",
+                address: "19 Cleveland Place, New York, NY 10012, USA",
+                lat: 40.7234,
+                lng: -73.9950
+            },
+            {
+                name: "Provence Restaurant Turks & Caicos",
+                address: "Grace Bay Road, Providenciales, Turks & Caicos Islands",
+                lat: 21.7830,
+                lng: -72.2540
+            },
+            {
+                name: "Sette Mezzo NYC",
+                address: "55 West 13th Street, New York, NY 10011, USA",
+                lat: 40.7363,
+                lng: -73.9965
+            },
+            {
+                name: "Sunset Marquis West Hollywood",
+                address: "1200 Alta Loma Road, West Hollywood, CA 90069, USA",
+                lat: 34.0922,
+                lng: -118.3766
+            },
+            {
+                name: "The Great American Health Bar NYC",
+                address: "110 West 57th Street, New York, NY 10019, USA",
+                lat: 40.7649,
+                lng: -73.9799
+            },
+            {
+                name: "The Tailor NYC",
+                address: "44 East 13th Street, New York, NY 10003, USA",
+                lat: 40.7337,
+                lng: -73.9905
+            },
+            {
+                name: "Peninsula Hotel",
+                address: "1 Grosvenor Place, London SW1X 7HJ, UK",
+                lat: 51.5017,
+                lng: -0.1520
+            },
+            {
+                name: "Peninsulla Hotel",
+                address: "1 Grosvenor Place, London SW1X 7HJ, UK",
+                lat: 51.5017,
+                lng: -0.1520
+            },
+            {
+                name: "Pierre Hotel",
+                address: "2 East 61st Street, New York, NY 10065, USA",
+                lat: 40.7654,
+                lng: -73.9714
+            },
+            {
+                name: "Plaza",
+                address: "768 Fifth Avenue, New York, NY 10019, USA",
+                lat: 40.7645,
+                lng: -73.9744
+            },
+            {
+                name: "Plaza Athenee Hotel",
+                address: "25 Avenue Montaigne, 75008 Paris, France",
+                lat: 48.8662,
+                lng: 2.3049
+            },
+            {
+                name: "Ritz Carlton",
+                address: "50 Central Park South, New York, NY 10019, USA",
+                lat: 40.7654,
+                lng: -73.9760
+            },
+            {
+                name: "Royalton",
+                address: "420 Park Avenue South, New York, NY 10016, USA",
+                lat: 40.7459,
+                lng: -73.9831
+            },
+            {
+                name: "Shutters on the Beach",
+                address: "1 Pico Boulevard, Santa Monica, CA 90405, USA",
+                lat: 34.0094,
+                lng: -118.4966
+            },
+            {
+                name: "Sotheby's",
+                address: "1334 York Avenue, New York, NY 10021, USA",
+                lat: 40.7703,
+                lng: -73.9558
+            },
+            {
+                name: "St Regis Hotel",
+                address: "2 East 55th Street, New York, NY 10022, USA",
+                lat: 40.7615,
+                lng: -73.9746
+            },
+            {
+                name: "Stanhope Hotel",
+                address: "995 Fifth Avenue, New York, NY 10028, USA",
+                lat: 40.7818,
+                lng: -73.9620
+            },
+            {
+                name: "Tao Restaurant",
+                address: "101 West 14th Street, New York, NY 10011, USA",
+                lat: 40.7373,
+                lng: -73.9966
+            },
+            {
+                name: "The Lowell",
+                address: "28 East 63rd Street, New York, NY 10065, USA",
+                lat: 40.7668,
+                lng: -73.9695
+            },
+            {
+                name: "The Westbury",
+                address: "37 West 57th Street, New York, NY 10019, USA",
+                lat: 40.7643,
+                lng: -73.9768
+            },
+            {
+                name: "Nicolas",
+                address: "19 Cleveland Place, New York, NY 10012, USA",
+                lat: 40.7234,
+                lng: -73.9950
             }
         ];
 
@@ -324,8 +458,8 @@
         const map = L.map('map').setView([40.7128, -74.0060], 4);
 
         // Add tile layer (the actual map imagery)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
             maxZoom: 19
         }).addTo(map);
 
@@ -389,9 +523,11 @@
         function filterCity(city) {
             const cityCoords = {
                 'New York': { lat: 40.7128, lng: -74.0060, zoom: 12 },
-                'Los Angeles': { lat: 34.0522, lng: -118.4437, zoom: 11 },
-                'London': { lat: 51.5103, lng: -0.1515, zoom: 13 },
-                'New Jersey': { lat: 40.6723, lng: -74.6615, zoom: 13 }
+                'Los Angeles': { lat: 34.0522, lng: -118.4000, zoom: 11 },
+                'London': { lat: 51.5074, lng: -0.1520, zoom: 12 },
+                'Paris': { lat: 48.8662, lng: 2.3049, zoom: 13 },
+                'Cairo': { lat: 30.0444, lng: 31.2357, zoom: 12 },
+                'Turks & Caicos': { lat: 21.7830, lng: -72.2540, zoom: 13 }
             };
             
             if (cityCoords[city]) {
