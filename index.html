@@ -69,55 +69,55 @@
             margin: 0 0 10px 0;
         }
 
-        .carousel-container {
+        .quote-container {
             width: 100%;
-            height: 240px;
-            background: #e0e0e0;
-            border: 1px solid #999;
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
+            background: #f8f8f8;
+            border: none;
+            border-radius: 0;
+            padding: 20px;
+            min-height: 120px;
         }
 
-        .carousel-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
+        .quote-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: #006600;
+            margin-bottom: 12px;
+            font-style: normal;
         }
 
-        .carousel-image.active {
-            display: block;
-        }
-
-        .upload-area {
-            margin-top: 15px;
-            padding: 10px;
-            background: white;
-            border: 2px dashed #999;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            display: none; /* Hidden by default - admin only */
-        }
-
-        .upload-area.admin-visible {
-            display: block;
-        }
-
-        .upload-area:hover {
-            border-color: #006600;
-            background: #f0f8f0;
-        }
-
-        .upload-area input {
-            display: none;
-        }
-
-        .upload-area label {
-            cursor: pointer;
+        .quote-restaurant {
             font-size: 11px;
+            font-weight: bold;
             color: #666;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quote-text {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .quote-text::before {
+            content: "— ";
+        }
+
+        .quote-text::after {
+            content: " —";
+        }
+
+        .quote-placeholder {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+            font-family: Georgia, "Times New Roman", Times, serif;
         }
 
         .main-content {
@@ -280,35 +280,6 @@
             font-weight: bold;
             font-size: 11px;
             color: #006600;
-        }
-
-        .info-box {
-            background: #ffffcc;
-            padding: 10px;
-            border: 2px solid #cc9900;
-            margin-bottom: 12px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .info-box p {
-            line-height: 1.4;
-            color: #000;
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .drawer {
-                width: 100%;
-                right: -100%;
-            }
-
-            .map-container {
-                height: calc(100vh - 200px);
-            }
-
-            h1 {
-                font-size: 18px;
-            }
         }
 
         /* Google Places Popup Styles */
@@ -505,6 +476,21 @@
         .places-popup-link:hover {
             background: #008800;
         }
+
+        @media (max-width: 768px) {
+            .drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .map-container {
+                height: calc(100vh - 200px);
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -531,13 +517,9 @@
 
     <div class="container">
         <div class="sidebar">
-            <h3>Photo Gallery</h3>
-            <div class="carousel-container" id="carousel">
-                <img src="" alt="Gallery Image" class="carousel-image active" id="carouselImage">
-            </div>
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple onchange="handleFileUpload(event)">
-                <label>Click to upload photos (JPG/PNG)</label>
+            <h3>Jeff says:</h3>
+            <div class="quote-container" id="quoteContainer">
+                <div class="quote-placeholder">Click a restaurant pin to see what Jeff said about it.</div>
             </div>
         </div>
         
@@ -559,6 +541,42 @@
     </div>
 
     <script>
+        // Restaurant quotes data
+        const restaurantQuotes = {
+            "ABC Kitchen": "Dinner at ABC Kitchen with friends before heading downtown.",
+            "Monkey Bar": "Had a great lunch for Woody Harrelson and Ben Foster for The Messenger at Monkey Bar yesterday…",
+            "Mr. Chow's": "Dinner followed next door at Mr. Chow's, which was packed as usual.",
+            "Madeo": "…by the debonair Charles Finch at Madeo.",
+            "Harry's Bar": "…ended the evening at Harry's Bar, where we stayed far too late.",
+            "Bel Air Hotel": "…nominees at the Bel Air Hotel, Nicky and I were seated together…",
+            "Montage Hotel": "…with a seated dinner at the Montage Hotel in Beverly Hills…",
+            "Australia Club": "…dinner at the Australia Club with several financiers…",
+            "Bedminster": "…met for dinner at Bedminster…",
+            "Gusto": "…lunch at Gusto, talking through the schedule…",
+            "Harvest": "…ate at Harvest before heading uptown…",
+            "Opia Cairo": "…drinks at Opia overlooking the Nile…",
+            "Nicola's NYC": "…dinner at Nicola's in Nolita…",
+            "Provence Restaurant Turks & Caicos": "[REDACTED]",
+            "Sette Mezzo NYC": "…met at Sette Mezzo for a late lunch…",
+            "Sunset Marquis West Hollywood": "[REDACTED]",
+            "The Great American Health Bar NYC": "[REDACTED]",
+            "The Tailor NYC": "[REDACTED]",
+            "Peninsula Hotel": "[REDACTED]",
+            "Pierre Hotel": "…staying at the Pierre Hotel, meetings downstairs…",
+            "Plaza": "…lunch at the Plaza with donors…",
+            "Plaza Athenee Hotel": "[REDACTED]",
+            "Ritz Carlton": "…dinner at the Ritz, security everywhere…",
+            "Royalton": "[REDACTED]",
+            "Shutters on the Beach": "…weekend at Shutters on the Beach, breakfast by the ocean…",
+            "Sotheby's": "…cocktails at Sotheby's after the viewing…",
+            "St Regis Hotel": "…meeting at the St Regis bar…",
+            "Stanhope Hotel": "…overnight at the Stanhope Hotel, then dinner…",
+            "Tao Restaurant": "…late dinner at Tao, loud but effective…",
+            "The Lowell": "[REDACTED]",
+            "The Westbury": "[REDACTED]",
+            "Nicolas": "…dinner at Nicola's in Nolita…"
+        };
+
         // Restaurant data with coordinates
         const restaurants = [
             {
@@ -761,6 +779,24 @@
             }
         ];
 
+        // Function to display quote in sidebar
+        function displayQuote(restaurantName) {
+            const container = document.getElementById('quoteContainer');
+            const quote = restaurantQuotes[restaurantName];
+            
+            if (quote) {
+                container.innerHTML = `
+                    <div class="quote-restaurant">${restaurantName}</div>
+                    <div class="quote-text">${quote}</div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="quote-restaurant">${restaurantName}</div>
+                    <div class="quote-text" style="color: #999;">No quote available for this location.</div>
+                `;
+            }
+        }
+
         // Initialize map centered on US
         const map = L.map('map').setView([40.7128, -74.0060], 4);
 
@@ -947,8 +983,11 @@
             
             marker.bindPopup(popup);
             
-            // Fetch place details when popup opens
+            // Display quote in sidebar and fetch place details when popup opens
             marker.on('popupopen', function() {
+                // Display quote in sidebar
+                displayQuote(restaurant.name);
+                
                 const popupContent = document.querySelector('.leaflet-popup-content');
                 if (popupContent) {
                     popupContent.innerHTML = '<div class="places-popup-loading">Loading Google Places data...</div>';
@@ -1014,95 +1053,6 @@
 
         // Initialize
         populateRestaurantList();
-
-        // Carousel functionality
-        let carouselImages = [];
-        let currentImageIndex = 0;
-        let carouselInterval;
-
-        function handleFileUpload(event) {
-            const files = event.target.files;
-            for (let file of files) {
-                if (file.type.match('image/jpeg') || file.type.match('image/png')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        carouselImages.push(e.target.result);
-                        if (carouselImages.length === 1) {
-                            showImage(0);
-                            startCarousel();
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-
-        function showImage(index) {
-            const img = document.getElementById('carouselImage');
-            if (carouselImages.length > 0) {
-                img.src = carouselImages[index];
-                img.style.display = 'block';
-                currentImageIndex = index;
-            }
-        }
-
-        function startCarousel() {
-            if (carouselInterval) clearInterval(carouselInterval);
-            carouselInterval = setInterval(() => {
-                if (carouselImages.length > 0) {
-                    currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
-                    showImage(currentImageIndex);
-                }
-            }, 20000); // 20 seconds
-        }
-
-        // Admin authentication system
-        // Press Ctrl+Shift+A to toggle admin mode
-        const ADMIN_PASSWORD = 'delfox2024'; // Change this to your desired password
-        
-        function checkAdminStatus() {
-            return sessionStorage.getItem('isAdmin') === 'true';
-        }
-
-        function updateUploadVisibility() {
-            const uploadArea = document.querySelector('.upload-area');
-            if (uploadArea) {
-                if (checkAdminStatus()) {
-                    uploadArea.classList.add('admin-visible');
-                } else {
-                    uploadArea.classList.remove('admin-visible');
-                }
-            }
-        }
-
-        function toggleAdminMode() {
-            if (checkAdminStatus()) {
-                // Already admin, log out
-                sessionStorage.removeItem('isAdmin');
-                alert('Admin mode disabled.');
-            } else {
-                // Prompt for password
-                const password = prompt('Enter admin password:');
-                if (password === ADMIN_PASSWORD) {
-                    sessionStorage.setItem('isAdmin', 'true');
-                    alert('Admin mode enabled. Upload button is now visible.');
-                } else if (password !== null) {
-                    alert('Incorrect password.');
-                }
-            }
-            updateUploadVisibility();
-        }
-
-        // Listen for keyboard shortcut: Ctrl+Shift+A
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                e.preventDefault();
-                toggleAdminMode();
-            }
-        });
-
-        // Check admin status on page load
-        updateUploadVisibility();
     </script>
 </body>
 </html>
